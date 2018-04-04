@@ -24,9 +24,7 @@ import com.google.firebase.database.Query;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Guest on 4/2/18.
- */
+
 
 public class SavedRestaurantListFragment extends Fragment implements OnStartDragListener {
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;

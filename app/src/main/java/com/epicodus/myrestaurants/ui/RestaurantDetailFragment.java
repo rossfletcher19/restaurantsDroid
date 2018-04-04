@@ -22,6 +22,8 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,13 +38,19 @@ public class RestaurantDetailFragment extends Fragment  implements View.OnClickL
     @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
 
     private Restaurant mRestaurant;
+    private ArrayList<Restaurant> mRestaurants;
+    private int mPosition;
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
 
-    public static RestaurantDetailFragment newInstance(Restaurant restaurant) {
+    public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants, Integer position, String source) {
         RestaurantDetailFragment restaurantDetailFragment = new RestaurantDetailFragment();
         Bundle args = new Bundle();
-        args.putParcelable("restaurant", Parcels.wrap(restaurant));
+
+        args.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(restaurants));
+        args.putInt(Constants.EXTRA_KEY_POSITION, position);
+        args.putString(Constants.KEY_SOURCE, source);
+
         restaurantDetailFragment.setArguments(args);
         return restaurantDetailFragment;
     }
@@ -50,7 +58,9 @@ public class RestaurantDetailFragment extends Fragment  implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRestaurant = Parcels.unwrap(getArguments().getParcelable("restaurant"));
+        mRestaurants = Parcels.unwrap(getArguments().getParcelable(Constants.EXTRA_KEY_RESTAURANTS));
+        mPosition = getArguments().getInt(Constants.EXTRA_KEY_POSITION);
+        mRestaurant = mRestaurants.get(mPosition);
     }
 
     @Override

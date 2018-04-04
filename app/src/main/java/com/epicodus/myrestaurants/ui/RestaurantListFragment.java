@@ -31,9 +31,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class RestaurantListFragment extends Fragment {
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
