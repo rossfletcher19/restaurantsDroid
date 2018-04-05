@@ -1,6 +1,7 @@
 package com.epicodus.myrestaurants.ui;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import com.epicodus.myrestaurants.R;
 import com.epicodus.myrestaurants.adapters.RestaurantListAdapter;
 import com.epicodus.myrestaurants.models.Restaurant;
 import com.epicodus.myrestaurants.services.YelpService;
+import com.epicodus.myrestaurants.util.OnRestaurantSelectedListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,8 +42,22 @@ public class RestaurantListFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private String mRecentAddress;
+    private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
+
+
 
     public RestaurantListFragment() {
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnRestaurantSelectedListener = (OnRestaurantSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + e.getMessage());
+        }
     }
 
     @Override
@@ -66,6 +82,36 @@ public class RestaurantListFragment extends Fragment {
         }
 
         return view;
+    }
+
+
+    public void getRestaurants(String location) {
+        final YelpService yelpService = new YelpService();
+
+        yelpService.findRestaurants(location, new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                mRestaurants = yelpService.processResults(response);
+
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants, mOnRestaurantSelectedListener);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -97,37 +143,10 @@ public class RestaurantListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getRestaurants(String location) {
-        final YelpService yelpService = new YelpService();
-
-        yelpService.findRestaurants(location, new Callback() {
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) {
-                mRestaurants = yelpService.processResults(response);
-
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants);
-                        mRecyclerView.setAdapter(mAdapter);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        mRecyclerView.setLayoutManager(layoutManager);
-                        mRecyclerView.setHasFixedSize(true);
-                    }
-                });
-            }
-        });
-    }
-
     private void addToSharedPreferences(String location) {
         mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
     }
+
+
 
 }

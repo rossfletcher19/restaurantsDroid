@@ -21,7 +21,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     @BindView(R.id.viewPager) ViewPager mViewPager;
     private RestaurantPagerAdapter adapterViewPager;
     ArrayList<Restaurant> mRestaurants = new ArrayList<>();
-    private String mSource;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +31,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
         int startingPosition = getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
-        mSource = getIntent().getStringExtra(Constants.KEY_SOURCE);
 
-        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants, mSource);
+
+        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants);
         mViewPager.setAdapter(adapterViewPager);
         mViewPager.setCurrentItem(startingPosition);
     }

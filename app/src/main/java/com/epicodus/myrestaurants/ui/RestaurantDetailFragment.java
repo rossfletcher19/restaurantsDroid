@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RestaurantDetailFragment extends Fragment  implements View.OnClickListener{
+public class RestaurantDetailFragment extends Fragment implements View.OnClickListener{
     @BindView(R.id.restaurantImageView) ImageView mImageLabel;
     @BindView(R.id.restaurantNameTextView) TextView mNameLabel;
     @BindView(R.id.cuisineTextView) TextView mCategoriesLabel;
@@ -43,13 +43,12 @@ public class RestaurantDetailFragment extends Fragment  implements View.OnClickL
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
 
-    public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants, Integer position, String source) {
+    public static RestaurantDetailFragment newInstance(ArrayList<Restaurant> restaurants, Integer position) {
         RestaurantDetailFragment restaurantDetailFragment = new RestaurantDetailFragment();
         Bundle args = new Bundle();
 
         args.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(restaurants));
         args.putInt(Constants.EXTRA_KEY_POSITION, position);
-        args.putString(Constants.KEY_SOURCE, source);
 
         restaurantDetailFragment.setArguments(args);
         return restaurantDetailFragment;
